@@ -1,0 +1,18 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+  <!-- Sparrow body -->
+  <ellipse cx="130" cy="120" rx="45" ry="55" fill="black"/>
+  <!-- Sparrow head -->
+  <circle cx="145" cy="80" rx="28" ry="32" fill="black"/>
+  <!-- Beak -->
+  <path d="M 165 75 L 185 70 L 168 82 Z" fill="black"/>
+  <!-- Eye -->
+  <circle cx="155" cy="72" r="6" fill="white"/>
+  <!-- Wing -->
+  <path d="M 140 130 Q 160 140 170 120 Q 165 145 145 150 Z" fill="black"/>
+  <!-- Tail -->
+  <path d="M 100 140 Q 85 135 80 155 Q 90 150 100 155 Z" fill="black"/>
+  <!-- Feet/Branch -->
+  <ellipse cx="115" cy="190" rx="65" ry="18" fill="black"/>
+  <!-- Branch detail -->
+  <path d="M 160 185 Q 180 180 200 190" stroke="black" stroke-width="6" fill="none" stroke-linecap="round"/>
+</svg>
