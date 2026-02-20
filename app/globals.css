@@ -119,12 +119,34 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
-/* Mobile responsive adjustments */
+.floating-piece {
+  animation: floatChess 9s ease-in-out infinite;
+  top: 120%;
+}
+
+@keyframes floatChess {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.45;
+  }
+  85% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(-130vh) rotate(10deg);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     @apply text-sm;
