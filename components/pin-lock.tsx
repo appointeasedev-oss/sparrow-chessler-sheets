@@ -12,22 +12,33 @@ interface PinLockProps {
   onUnlock: () => void
 }
 
+const CORRECT_PIN = "4356"
+
+const normalizePin = (value: string) => value.replace(/\D/g, "").slice(0, 4)
+
 export default function PinLock({ onUnlock }: PinLockProps) {
   useAutoTheme()
 
   const [pin, setPin] = useState("")
   const [error, setError] = useState("")
-  const CORRECT_PIN = "4356"
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (pin === CORRECT_PIN) {
+    const sanitizedPin = normalizePin(pin)
+
+    if (sanitizedPin.length !== 4) {
+      setError("Please enter a 4-digit PIN.")
+      return
+    }
+
+    if (sanitizedPin === CORRECT_PIN) {
       setError("")
       onUnlock()
-    } else {
-      setError("Invalid PIN. Try again.")
-      setPin("")
+      return
     }
+
+    setError("Invalid PIN. Try again.")
+    setPin("")
   }
 
   return (
@@ -45,9 +56,13 @@ export default function PinLock({ onUnlock }: PinLockProps) {
           <Input
             type="password"
             inputMode="numeric"
+            pattern="[0-9]*"
             placeholder="Enter 4-digit PIN"
             value={pin}
-            onChange={(e) => setPin(e.target.value.slice(0, 4))}
+            onChange={(e) => {
+              setPin(normalizePin(e.target.value))
+              if (error) setError("")
+            }}
             maxLength={4}
             className="text-center text-2xl tracking-widest"
             autoFocus
