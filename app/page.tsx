@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card"
 import PinLock from "@/components/pin-lock"
 import TableSelector from "@/components/table-selector"
 import SpreadsheetGrid from "@/components/spreadsheet-grid"
-import Image from "next/image"
 import useAutoTheme from "@/hooks/use-auto-theme"
 
 const TABLES = ["about", "achievements", "announcements", "channels", "contacts", "events", "gallery", "responses", "sponsors", "timeline", "tutorials"]
@@ -85,16 +84,6 @@ export default function Home() {
           </span>
         ))}
       </div>
-
-      <header className="sticky top-0 z-40 border-b border-amber-200/80 bg-white/90 shadow-sm backdrop-blur-sm dark:border-amber-800/70 dark:bg-black/50">
-        <div className="mx-auto flex max-w-[1400px] items-center gap-3 px-3 py-3 sm:px-4 md:px-6 lg:px-8">
-          <Image src="/sparrow-logo.png" alt="Sparrow Sheets logo" width={40} height={40} className="h-8 w-8 shrink-0 sm:h-10 sm:w-10" priority />
-          <div className="min-w-0">
-            <h1 className="truncate text-lg font-bold text-gray-900 sm:text-2xl md:text-3xl dark:text-amber-50">Sparrow Sheets</h1>
-            <p className="hidden text-xs text-amber-800/80 sm:block dark:text-amber-200/80">Chess-themed workspace • Sparrow branded</p>
-          </div>
-        </div>
-      </header>
 
       <main className="relative z-10 mx-auto max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8">
         <Card className="mb-4 border-amber-200/80 bg-white/90 p-3 shadow-sm sm:mb-6 sm:p-4 dark:border-amber-800 dark:bg-black/45">
