@@ -6,9 +6,8 @@ import { useState, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Plus } from 'lucide-react'
+import { Plus } from "lucide-react"
 import ImageUploadCell from "./image-upload-cell"
-import Image from "next/image"
 
 interface SpreadsheetGridProps {
   supabase: any
@@ -46,10 +45,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
       const rowData = data[row]
       const rowId = rowData.id
 
-      await supabase
-        .from(tableName)
-        .update({ [col]: editValue })
-        .eq("id", rowId)
+      await supabase.from(tableName).update({ [col]: editValue }).eq("id", rowId)
 
       setEditingCell(null)
       onDataUpdate()
@@ -82,7 +78,6 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
       const newEntry: Record<string, string> = {}
       columns.forEach((col) => {
         if (col !== "id" && col !== "created_at") {
-          // Use a placeholder value instead of empty string to pass RLS policy
           newEntry[col] = "—"
         }
       })
@@ -114,7 +109,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
 
   if (columns.length === 0) {
     return (
-      <Card className="p-8 text-center">
+      <Card className="border-amber-200 bg-white/90 p-8 text-center">
         <p className="text-gray-600">No data available in this table</p>
       </Card>
     )
@@ -123,21 +118,28 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={handleAddEntry} disabled={addingEntry} className="bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2">
-          <Plus className="w-4 h-4 mr-1 sm:mr-2" />
+        <Button
+          onClick={handleAddEntry}
+          disabled={addingEntry}
+          className="bg-gray-900 px-3 py-2 text-xs text-white hover:bg-black sm:px-4 sm:text-sm"
+        >
+          <Plus className="mr-1 h-4 w-4 sm:mr-2" />
           {addingEntry ? "Adding..." : "Add Entry"}
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="w-full border-collapse bg-white text-xs sm:text-sm">
+      <div className="overflow-x-auto rounded-lg border border-amber-200 bg-white/90 shadow-sm">
+        <table className="w-full min-w-[720px] border-collapse text-xs sm:text-sm">
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="px-2 sm:px-4 py-2 sm:py-3 text-center text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap w-14 sm:w-16">
+            <tr className="border-b border-amber-200 bg-amber-50/80">
+              <th className="w-16 whitespace-nowrap px-2 py-2 text-center text-xs font-semibold text-gray-900 sm:px-4 sm:py-3 sm:text-sm">
                 Delete
               </th>
               {columns.map((col) => (
-                <th key={col} className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-semibold text-gray-900 whitespace-nowrap">
+                <th
+                  key={col}
+                  className="whitespace-nowrap px-2 py-2 text-left text-xs font-semibold text-amber-950 sm:px-4 sm:py-3 sm:text-sm"
+                >
                   {col}
                 </th>
               ))}
@@ -146,19 +148,19 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + 1} className="px-2 sm:px-4 py-4 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
+                <td colSpan={columns.length + 1} className="px-2 py-6 text-center text-xs text-gray-500 sm:px-4 sm:py-8 sm:text-sm">
                   No records found
                 </td>
               </tr>
             ) : (
               data.map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                  <td className="px-2 sm:px-4 py-2 sm:py-3 text-center">
+                <tr key={rowIndex} className="border-b border-amber-100 transition-colors hover:bg-amber-50/50">
+                  <td className="px-2 py-2 text-center sm:px-4 sm:py-3">
                     <Button
                       onClick={() => handleDeleteRow(rowIndex)}
                       variant="outline"
                       size="sm"
-                      className="text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 text-xs px-1 sm:px-2"
+                      className="border-red-300 px-2 text-xs text-red-700 hover:border-red-400 hover:bg-red-50"
                     >
                       Delete
                     </Button>
@@ -171,20 +173,18 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
                     return (
                       <td
                         key={`${rowIndex}-${col}`}
-                        className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm cursor-pointer"
+                        className="cursor-pointer px-2 py-2 text-xs sm:px-4 sm:py-3 sm:text-sm"
                         onClick={() => !isImageCol && handleCellClick(rowIndex, col)}
                       >
                         {isImageCol ? (
-                          <div className="flex items-center justify-center">
-                            <ImageUploadCell
-                              supabase={supabase}
-                              tableName={tableName}
-                              rowId={row.id}
-                              columnName={col}
-                              currentValue={value}
-                              onUploadSuccess={onDataUpdate}
-                            />
-                          </div>
+                          <ImageUploadCell
+                            supabase={supabase}
+                            tableName={tableName}
+                            rowId={row.id}
+                            columnName={col}
+                            currentValue={value}
+                            onUploadSuccess={onDataUpdate}
+                          />
                         ) : isEditing ? (
                           <Input
                             ref={inputRef}
@@ -192,11 +192,11 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
                             onChange={(e) => setEditValue(e.target.value)}
                             onBlur={() => handleSave(rowIndex, col)}
                             onKeyDown={(e) => handleKeyDown(e, rowIndex, col)}
-                            className="w-full px-2 py-1 border border-blue-500 rounded text-xs sm:text-sm"
+                            className="h-8 w-full border-amber-400 px-2 py-1 text-xs sm:text-sm"
                             autoFocus
                           />
                         ) : (
-                          <span className="text-gray-900 break-words max-w-xs inline-block text-xs sm:text-sm">{value || "—"}</span>
+                          <span className="inline-block max-w-xs break-words text-gray-900">{value || "—"}</span>
                         )}
                       </td>
                     )

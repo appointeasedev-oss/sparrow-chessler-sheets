@@ -10,16 +10,16 @@ interface TableSelectorProps {
 
 export default function TableSelector({ tables, selectedTable, onSelectTable }: TableSelectorProps) {
   return (
-    <div className="flex flex-wrap gap-1 sm:gap-2">
+    <div className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible">
       {tables.map((table) => (
         <Button
           key={table}
           onClick={() => onSelectTable(table)}
           variant={selectedTable === table ? "default" : "outline"}
-          className={`capitalize transition-colors text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 ${
+          className={`capitalize transition-all text-xs sm:text-sm px-3 py-2 shrink-0 snap-start ${
             selectedTable === table
-              ? "bg-gray-900 text-white hover:bg-gray-800"
-              : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              ? "bg-gray-900 text-white hover:bg-black"
+              : "border-amber-300 text-amber-900 hover:bg-amber-100"
           }`}
         >
           {table}
