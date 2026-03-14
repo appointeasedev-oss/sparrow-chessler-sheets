@@ -1,5 +1,5 @@
 const HEHO_API_URL = "https://heho.vercel.app/api/v1/database/manage";
-const HEHO_API_KEY = process.env.NEXT_PUBLIC_HEHO_API_KEY || "";
+const HEHO_API_KEY = "67d397664364000000000000"; // Hardcoded Heho API Key
 
 export interface HehoResponse<T = any> {
   data?: T;
