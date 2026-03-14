@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Crop, Upload, X } from "lucide-react"
 
 interface ImageUploadCellProps {
-  supabase: any // This is now the heho client
+  heho: any
+  supabase: any
   tableName: string
   rowId: number | string
   columnName: string
@@ -85,6 +86,7 @@ async function cropToLandscape(file: File): Promise<File> {
 }
 
 export default function ImageUploadCell({
+  heho,
   supabase,
   tableName,
   rowId,
@@ -105,27 +107,26 @@ export default function ImageUploadCell({
 
       const file = landscapeCropEnabled ? await cropToLandscape(selectedFile) : selectedFile
 
-      // Upload file to fvd bucket
+      // Upload file to Supabase storage bucket "fvd"
       const fileName = `${tableName}-${rowId}-${Date.now()}-${file.name}`
       const { error: uploadError } = await supabase.storage.from("fvd").upload(fileName, file)
 
       if (uploadError) {
         console.error("Upload error:", uploadError)
-        alert("Failed to upload image")
+        alert("Failed to upload image to Supabase")
         return
       }
 
-      // Get public URL
+      // Get public URL from Supabase
       const { data: urlData } = supabase.storage.from("fvd").getPublicUrl(fileName)
-
       const publicUrl = urlData.publicUrl
 
-      // Update the table with image URL
-      const { error: updateError } = await supabase.from(tableName).update({ [columnName]: publicUrl }).eq("id", rowId)
+      // Update the table in Heho with image URL
+      const { error: updateError } = await heho.from(tableName).update({ [columnName]: publicUrl }).eq("id", rowId)
 
       if (updateError) {
         console.error("Update error:", updateError)
-        alert("Failed to save image URL")
+        alert("Failed to save image URL to Heho")
         return
       }
 
@@ -147,12 +148,12 @@ export default function ImageUploadCell({
     try {
       setRemoving(true)
 
-      // Update the table to remove image URL
-      const { error: updateError } = await supabase.from(tableName).update({ [columnName]: null }).eq("id", rowId)
+      // Update the table in Heho to remove image URL
+      const { error: updateError } = await heho.from(tableName).update({ [columnName]: null }).eq("id", rowId)
 
       if (updateError) {
         console.error("Update error:", updateError)
-        alert("Failed to remove image")
+        alert("Failed to remove image from Heho")
         return
       }
 

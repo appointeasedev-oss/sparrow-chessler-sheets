@@ -10,14 +10,15 @@ import { Plus } from "lucide-react"
 import ImageUploadCell from "./image-upload-cell"
 
 interface SpreadsheetGridProps {
-  supabase: any // This is now the heho client
+  heho: any
+  supabase: any
   tableName: string
   data: any[]
   columns: string[]
   onDataUpdate: () => void
 }
 
-export default function SpreadsheetGrid({ supabase, tableName, data, columns, onDataUpdate }: SpreadsheetGridProps) {
+export default function SpreadsheetGrid({ heho, supabase, tableName, data, columns, onDataUpdate }: SpreadsheetGridProps) {
   const [editingCell, setEditingCell] = useState<{ row: number; col: string } | null>(null)
   const [editValue, setEditValue] = useState("")
   const [addingEntry, setAddingEntry] = useState(false)
@@ -45,7 +46,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
       const rowData = data[row]
       const rowId = rowData.id
 
-      await supabase.from(tableName).update({ [col]: editValue }).eq("id", rowId)
+      await heho.from(tableName).update({ [col]: editValue }).eq("id", rowId)
 
       setEditingCell(null)
       onDataUpdate()
@@ -63,7 +64,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
       const rowData = data[row]
       const rowId = rowData.id
 
-      await supabase.from(tableName).delete().eq("id", rowId)
+      await heho.from(tableName).delete().eq("id", rowId)
 
       onDataUpdate()
     } catch (error) {
@@ -82,7 +83,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
         }
       })
 
-      const { error } = await supabase.from(tableName).insert([newEntry])
+      const { error } = await heho.from(tableName).insert([newEntry])
 
       if (error) {
         console.error("Error adding entry:", error)
@@ -178,6 +179,7 @@ export default function SpreadsheetGrid({ supabase, tableName, data, columns, on
                       >
                         {isImageCol ? (
                           <ImageUploadCell
+                            heho={heho}
                             supabase={supabase}
                             tableName={tableName}
                             rowId={row.id}

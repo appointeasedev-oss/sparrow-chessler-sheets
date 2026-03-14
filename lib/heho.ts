@@ -33,8 +33,6 @@ export const heho = {
 
     insert: async (data: any[]): Promise<HehoResponse> => {
       try {
-        // Heho API seems to take a single object for 'add' action based on the example
-        // but the app sends an array. We'll handle the first element.
         const response = await fetch(HEHO_API_URL, {
           method: "POST",
           headers: {
@@ -67,7 +65,7 @@ export const heho = {
             body: JSON.stringify({
               action: "edit",
               tableName,
-              id: value, // Assuming 'id' is the primary key as per Heho docs
+              id: value,
               data: updateData,
             }),
           });
@@ -104,19 +102,4 @@ export const heho = {
       },
     }),
   }),
-  
-  // Mock storage for now as Heho doesn't seem to have a storage API in the provided snippet
-  // We'll use a placeholder or a simple upload if available.
-  // Since the user didn't provide storage docs, I'll keep the structure but it might need adjustment.
-  storage: {
-    from: (bucket: string) => ({
-      upload: async (path: string, file: File) => {
-        console.warn("Storage upload not implemented for Heho yet");
-        return { error: { message: "Storage not implemented" } };
-      },
-      getPublicUrl: (path: string) => {
-        return { data: { publicUrl: "" } };
-      }
-    })
-  }
 };
