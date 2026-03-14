@@ -1,44 +1,32 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { createBrowserClient } from "@supabase/ssr"
 import { Card } from "@/components/ui/card"
 import PinLock from "@/components/pin-lock"
 import TableSelector from "@/components/table-selector"
 import SpreadsheetGrid from "@/components/spreadsheet-grid"
 import Image from "next/image"
+import { heho } from "@/lib/heho"
 
 const TABLES = ["about", "achievements", "announcements", "channels", "contacts", "events", "gallery", "responses", "sponsors", "timeline", "tutorials"]
-
-const SUPABASE_URL = "https://olcojkaokbyrbqjueboo.supabase.co"
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9sY29qa2Fva2J5cmJxanVlYm9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1MzExNjAsImV4cCI6MjA3ODEwNzE2MH0.tjgr0lZ0TzWHr7NrV-6ZdHLADGOBNTCHmaBP3Wb1d7Y"
 
 const CHESS_ICONS = ["♔", "♕", "♖", "♗", "♘", "♙"]
 
 export default function Home() {
   const [isUnlocked, setIsUnlocked] = useState(false)
-  const [supabase, setSupabase] = useState<any>(null)
   const [selectedTable, setSelectedTable] = useState("about")
   const [tableData, setTableData] = useState<any[]>([])
   const [columns, setColumns] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    const client = createBrowserClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    setSupabase(client)
-  }, [])
-
   const fetchData = useCallback(
     async (table: string) => {
-      if (!supabase) return
-
       try {
         setLoading(true)
         setError("")
 
-        const { data, error: fetchError } = await supabase.from(table).select("*")
+        const { data, error: fetchError } = await heho.from(table).select("*")
 
         if (fetchError) {
           console.error("Fetch error:", fetchError)
@@ -48,10 +36,12 @@ export default function Home() {
           return
         }
 
-        setTableData(data || [])
+        // Heho API returns the array directly based on the example
+        const rows = Array.isArray(data) ? data : (data?.data || [])
+        setTableData(rows)
 
-        if (data && data.length > 0) {
-          setColumns(Object.keys(data[0]))
+        if (rows && rows.length > 0) {
+          setColumns(Object.keys(rows[0]))
         } else {
           setColumns([])
         }
@@ -62,12 +52,12 @@ export default function Home() {
         setLoading(false)
       }
     },
-    [supabase],
+    [],
   )
 
   useEffect(() => {
     fetchData(selectedTable)
-  }, [supabase, selectedTable, fetchData])
+  }, [selectedTable, fetchData])
 
   if (!isUnlocked) {
     return <PinLock onUnlock={() => setIsUnlocked(true)} />
@@ -121,7 +111,7 @@ export default function Home() {
 
         {!loading && !error && (
           <SpreadsheetGrid
-            supabase={supabase}
+            supabase={heho}
             tableName={selectedTable}
             data={tableData}
             columns={columns}

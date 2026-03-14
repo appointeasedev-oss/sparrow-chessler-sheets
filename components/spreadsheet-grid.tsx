@@ -10,7 +10,7 @@ import { Plus } from "lucide-react"
 import ImageUploadCell from "./image-upload-cell"
 
 interface SpreadsheetGridProps {
-  supabase: any
+  supabase: any // This is now the heho client
   tableName: string
   data: any[]
   columns: string[]

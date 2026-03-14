@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Crop, Upload, X } from "lucide-react"
 
 interface ImageUploadCellProps {
-  supabase: any
+  supabase: any // This is now the heho client
   tableName: string
   rowId: number | string
   columnName: string
